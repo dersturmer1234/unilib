@@ -21,7 +21,7 @@ import { signInSchema } from "@/app/(auth)/schemas";
 import { useLogin } from "@/app/(auth)/api/use-login";
 
 const SignInCard = () => {
-  const { mutate } = useLogin();
+  const { mutate, isPending } = useLogin();
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -74,7 +74,7 @@ const SignInCard = () => {
                 name="password"
               />
             </div>
-            <Button type={"submit"} className="w-full">
+            <Button type={"submit"} disabled={isPending} className="w-full">
               Sign In
             </Button>
           </form>

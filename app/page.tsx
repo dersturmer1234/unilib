@@ -1,9 +1,15 @@
-import { Button } from "@/components/ui/button";
+import { getCurrent } from "@/app/(auth)/actions";
+import { redirect } from "next/navigation";
+import UserButton from "@/components/userButton";
 
-const home = () => {
+const home = async () => {
+  const user = await getCurrent();
+  if (!user) {
+    redirect("/sign-in");
+  }
   return (
     <div>
-      <Button></Button>
+      <UserButton />a
     </div>
   );
 };

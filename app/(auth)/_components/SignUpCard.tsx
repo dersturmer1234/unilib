@@ -24,7 +24,7 @@ import { useRegister } from "@/app/(auth)/api/use-register";
 
 const SignUpCard = () => {
   const [hidePass, setHidePass] = useState(true);
-  const { mutate } = useRegister();
+  const { mutate, isPending } = useRegister();
 
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
@@ -132,7 +132,7 @@ const SignUpCard = () => {
               />
             </div>
 
-            <Button type="submit" className="w-full">
+            <Button type="submit" disabled={isPending} className="w-full">
               Sign Up
             </Button>
           </form>

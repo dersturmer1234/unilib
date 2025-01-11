@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ReactNode } from "react";
 import { Toaster } from "sonner";
+import { QueryProvider } from "@/components/providers/query-provider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -23,7 +24,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} bg-accent antialiased min-h-screen`}>
         <Toaster />
-        {children}
+        <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
   );
