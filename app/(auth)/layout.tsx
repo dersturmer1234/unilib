@@ -11,7 +11,7 @@ interface AuthLayoutProps {
 
 const AuthLayout = ({ children }: AuthLayoutProps) => {
   const pathname = usePathname();
-
+  const isSignIn = pathname === "/sign-in";
   return (
     <div className="flex flex-col gap-2">
       <nav className="flex max-w-3xl mx-auto h-14 w-full justify-between items-center">
@@ -19,9 +19,9 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
           <CheckCheckIcon size={32} />
           <h1 className="font-medium text-2xl">Gira</h1>
         </div>
-        <Button variant="outline">
-          <Link href={pathname === "/sign-in" ? "/sign-up" : "/sign-in"}>
-            {pathname === "/sign-in" ? "Sign Up" : "Login"}
+        <Button asChild variant="outline">
+          <Link href={isSignIn ? "/sign-up" : "/sign-in"}>
+            {isSignIn ? "Sign Up" : "Login"}
           </Link>
         </Button>
       </nav>

@@ -18,39 +18,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useState } from "react";
 import { EyeClosed, EyeIcon } from "lucide-react";
-
-const signUpSchema = z
-  .object({
-    name: z.string().trim().min(1, "Name is required"),
-    surname: z.string().trim().min(1, "Surname is required").trim(),
-    nickname: z.string().trim().min(1, "Nickname is required").trim(),
-    email: z
-      .string()
-      .trim()
-      .email("You must use a valid email")
-      .min(1, "Required"),
-    password: z
-      .string()
-      .min(8, "Password must be at least 8 characters long")
-      .max(256),
-    repeatPassword: z
-      .string()
-      .min(8, "Password must be at least 8 characters long")
-      .max(256),
-  })
-  .refine((data) => data.password === data.repeatPassword, {
-    message: "Passwords do not match",
-    path: ["repeatPassword"],
-  });
+import Link from "next/link";
+import { signUpSchema } from "@/app/(auth)/schemas";
+import { useRegister } from "@/app/(auth)/api/use-register";
 
 const SignUpCard = () => {
   const [hidePass, setHidePass] = useState(true);
+  const { mutate } = useRegister();
+
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
       name: "",
-      surname: "",
-      nickname: "",
       email: "",
       password: "",
       repeatPassword: "",
@@ -59,6 +38,7 @@ const SignUpCard = () => {
 
   const onSubmit = (data: z.infer<typeof signUpSchema>) => {
     toast(`Sign Up Submitted ${JSON.stringify(data)}`);
+    mutate(data);
   };
 
   return (
@@ -83,34 +63,6 @@ const SignUpCard = () => {
                 )}
                 control={form.control}
                 name="name"
-              />
-
-              {/* Surname */}
-              <FormField
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input {...field} placeholder="Surname" type="text" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-                control={form.control}
-                name="surname"
-              />
-
-              {/* Nickname */}
-              <FormField
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input {...field} placeholder="Nickname" type="text" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-                control={form.control}
-                name="nickname"
               />
 
               {/* Email */}
@@ -186,6 +138,12 @@ const SignUpCard = () => {
           </form>
         </Form>
         <Separator />
+        <div className="flex items-center">
+          <h1 className="text-muted-foreground">Already have an account?</h1>
+          <Button asChild variant="link" className="w-1/3 mx-auto">
+            <Link href={"/sign-in"}>Login</Link>
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );

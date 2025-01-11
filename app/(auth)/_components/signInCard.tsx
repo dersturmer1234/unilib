@@ -16,16 +16,12 @@ import Header from "@/app/(auth)/_components/header";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-
-const signInSchema = z.object({
-  email: z.string().email("You must use email to login").min(1, "Required"),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 charecters long ")
-    .max(256),
-});
+import Link from "next/link";
+import { signInSchema } from "@/app/(auth)/schemas";
+import { useLogin } from "@/app/(auth)/api/use-login";
 
 const SignInCard = () => {
+  const { mutate } = useLogin();
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -36,6 +32,7 @@ const SignInCard = () => {
 
   const onSubmit = (data: z.infer<typeof signInSchema>) => {
     toast("Submitted" + JSON.stringify(data));
+    mutate(data);
   };
 
   return (
@@ -52,12 +49,7 @@ const SignInCard = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Input
-                        {...field}
-                        required
-                        placeholder="Email"
-                        type="text"
-                      />
+                      <Input {...field} placeholder="Email" type="text" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -91,6 +83,12 @@ const SignInCard = () => {
         <div className="flex gap-1 flex-col w-full ">
           <Button variant="outline" className="w-full">
             Login with Google
+          </Button>
+        </div>
+        <div className="flex items-center justify-between">
+          <h1 className="text-muted-foreground">Don't have an account?</h1>
+          <Button asChild variant="link" className="w-1/3 mx-auto">
+            <Link href={"/sign-up"}>Sign up</Link>
           </Button>
         </div>
       </CardContent>
